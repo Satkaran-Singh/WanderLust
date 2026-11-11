@@ -1,0 +1,262 @@
+body{
+    font-family: "Plus Jakarta Sans", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container{
+    flex:1;
+}
+/* Navbar */
+.navbar{
+    min-height: 5rem;
+    height: auto;
+    background-color: white;
+}
+
+.fa-compass{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+/* Footer */
+.f-info-links a{
+    text-decoration: none;
+    color: #222222;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+.f-info-socials,
+.f-info-links,
+.f-info-brand{
+    width : 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+.f-info-socials i{
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.f-info{
+    text-align: center;
+    height: 8rem;
+    display: flex;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-evenly;
+}
+
+/* Cards */
+.listing-card{
+    border: none !important;
+    margin-bottom: 2rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+.card-text{
+    font-weight: 400;
+}
+.listing-link{
+    text-decoration: none;
+}
+
+/* Card Effect */
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+/* Add and Edit Button */
+.add-btn,
+.edit-btn,
+.search-btn,
+.auth-btn{
+    background-color:  #fe424d !important;
+    color: white !important;
+    border: none !important;
+    transition: background-color 0.2s ease;
+}
+.add-btn:hover,
+.edit-btn:hover,
+.search-btn:hover,
+.auth-btn:hover {
+    background-color: #e63946 !important;
+    color: white !important;
+}
+
+/* Show Page */
+.show-img{
+    height:30vh;
+}
+
+.btns{
+    display: flex;
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* MAP */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Filters */
+#filters{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.filter{
+    text-align: center;
+    margin-right: 2rem;
+    margin-top: 2rem;
+    opacity: 0.7;
+}
+.filter:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+.filter p{
+    font-size: 0.8rem;
+}
+.filter a{
+    text-decoration: none;
+    color: inherit;
+}
+.explore-btn {
+    background-color: #fe424d;
+    color: white;
+    border: 1px solid #fe424d;
+    border-radius: 1rem;
+}
+
+.explore-btn:hover {
+    background-color: #e63946;
+    color: white;
+    border-color: #e63946;
+}
+
+/* tax toogle */
+
+.tax-info{
+    display: none;
+}
+
+.tax-toggle{
+    border: 1px solid black;
+    border-radius: 1rem;
+    height: 3.25rem;
+    padding: 1rem;
+    margin-left: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Search button */
+.search-btn {
+    background-color: #fe424d;
+    color: #Ffffff;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+}
+.search-btn:hover {
+    background-color: #fe424d;
+    color: #Ffffff; 
+}
+.search-btn i {
+    display: inline;
+    margin-right: 1rem;
+}
+
+/* Search input */
+
+.search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    min-width: 0;
+}
+
+/* Live search */
+#searchResults {
+    max-height: 350px;
+    overflow-y: auto;
+    border-radius: 8px;
+    margin-top: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#searchResults:empty {
+    display: none;
+}
+
+#searchResults .list-group-item {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+#searchResults .list-group-item:hover {
+    background-color: #f5f5f5;
+}
+
+.user-link{
+    text-decoration: none;
+    color:#fe424d;
+    cursor: pointer;
+}
+
+/* User icon */
+.fa-circle-user {
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+/* Mobile Responsive Spacing */
+@media (max-width: 767px) {
+    .listing-card {
+        margin-bottom: 1rem;
+    }
+
+    #filters {
+        gap: 1rem;
+    }
+
+    .filter {
+        margin-right: 0;
+        margin-top: 1rem;
+    }
+
+    #map {
+        width: 100%;
+    }
+}
