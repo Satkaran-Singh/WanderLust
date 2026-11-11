@@ -1,10 +1,11 @@
 const User = require("../models/user.js");
+const flashRedirect = require("../utils/flashRedirect");
 
 module.exports.renderSignupForm = (req,res) =>{
     res.render("users/signup.ejs");
 };
 
-module.exports.signup = async(req, res) =>{
+module.exports.signup = async(req, res, next) =>{
     try {
         let {username, email, password} = req.body;
         const newUser = new User({email, username});
@@ -15,11 +16,11 @@ module.exports.signup = async(req, res) =>{
                 return next(err);
             }
             req.flash("success", "User registered successfully.... Welcome to Wanderlust!");
-            res.redirect("/listings");
+            flashRedirect(req, res, next, "/listings");
         })
     } catch(e) {
         req.flash("error", e.message);
-        res.redirect("/signup");
+        flashRedirect(req, res, next, "/signup");
     }
 };
 
@@ -27,18 +28,18 @@ module.exports.renderLoginForm = (req,res) =>{
     res.render("users/login.ejs");
 }
 
-module.exports.login = async(req, res) => {
+module.exports.login = async(req, res, next) => {
         req.flash("success", "Welcome back to Wanderlust!");
         let redirectUrl = res.locals.redirectUrl || "/listings";
-        res.redirect(redirectUrl);
+        flashRedirect(req, res, next, redirectUrl);
 }
 
-module.exports.logout =(req, res) => {
+module.exports.logout =(req, res, next) => {
     req.logout((err) => {
         if(err) {
             return next(err);
         }
         req.flash("success", "You are logged out sucessfully!");
-        res.redirect("/listings");
+        flashRedirect(req, res, next, "/listings");
     })
 }

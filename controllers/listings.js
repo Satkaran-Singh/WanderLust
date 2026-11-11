@@ -2,6 +2,7 @@ const Listing = require("../models/listing");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+const flashRedirect = require("../utils/flashRedirect");
 const categoryMap = {
     trending: "Trending",
     rooms: "Rooms",
@@ -24,7 +25,7 @@ module.exports.renderNewForm = (req,res) => {
     res.render("listings/new.ejs", { listing: null });
 };
 
-module.exports.showListing = async (req, res) => {
+module.exports.showListing = async (req, res, next) => {
     let {id} = req.params;
     const listing = await Listing.findById(id)
     .populate({
@@ -36,7 +37,7 @@ module.exports.showListing = async (req, res) => {
     .populate("owner");
     if(!listing) {
         req.flash("error","Listing you request does not exist!");
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     res.render("listings/show.ejs", {listing});
 };
@@ -65,21 +66,21 @@ module.exports.createListing = async(req, res, next) => {
     let savedListing = await newListing.save();
     console.log(savedListing);
     req.flash("success", "New Listing Created Succesfully!");
-    res.redirect("/listings")
+    flashRedirect(req, res, next, "/listings");
 }
 
-module.exports.renderEditForm = async(req, res) => {
+module.exports.renderEditForm = async(req, res, next) => {
     let {id} =req.params;
     const listing = await Listing.findById(id);
     if(!listing) {
         req.flash("error","Listing you requested for editing does not exist!");
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     let originalImageUrl = listing.image.url.replace("/upload/h_300,w_250", "/upload");
     res.render("listings/edit.ejs", {listing, originalImageUrl});
 };
 
-module.exports.updateListing = async (req,res) => {
+module.exports.updateListing = async (req,res, next) => {
     let {id} = req.params;
     let response = await geocodingClient.forwardGeocode({
         query: req.body.listing.location,
@@ -88,7 +89,7 @@ module.exports.updateListing = async (req,res) => {
     const feature = response.body.features[0];
     if (!feature) {
         req.flash("error", "Invalid location! Please enter a valid location.");
-        return res.redirect(`/listings/${id}/edit`);
+        return flashRedirect(req, res, next, `/listings/${id}/edit`);
     }
 
     let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing, geometry: feature.geometry});
@@ -100,37 +101,37 @@ module.exports.updateListing = async (req,res) => {
         await listing.save();
     }
     req.flash("success", "Listing Updated Succesfully!");
-    res.redirect(`/listings/${id}`);
+    flashRedirect(req, res, next, `/listings/${id}`);
 };
 
-module.exports.destroyListing = async(req,res) => {
+module.exports.destroyListing = async(req,res, next) => {
     let {id} = req.params;
     let deleted_listing = await Listing.findByIdAndDelete(id);
     console.log(deleted_listing);
     req.flash("success", "Listing Deleted Succesfully!");
-    res.redirect("/listings");
+    flashRedirect(req, res, next, "/listings");
 };
 
-module.exports.filterListing = async (req,res) => {
+module.exports.filterListing = async (req,res, next) => {
     let {category} = req.params;
     let selectedCategory = categoryMap[category];
     if (!selectedCategory) {
         req.flash("error", "Category not found!");
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     const categoryListings = await Listing.find({category: selectedCategory});
     if (categoryListings.length === 0) {
         req.flash("error", `No listing exists in ${selectedCategory} yet!`);
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     res.render("listings/index.ejs", {allListings: categoryListings });
 };
 
-module.exports.searchListing = async (req, res) => {
+module.exports.searchListing = async (req, res, next) => {
     let { q } = req.query;
     if(!q || !q.trim()){
         req.flash("error", "Invalid search input. Please try again with valid input!!")
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     let data = q.trim();
     let foundListing = await Listing.find({
@@ -145,7 +146,7 @@ module.exports.searchListing = async (req, res) => {
     });
     if(foundListing.length === 0){
         req.flash("error", "No data is found. Please try again!!")
-        return res.redirect("/listings");
+        return flashRedirect(req, res, next, "/listings");
     }
     req.flash("success", `Listings found for ${data}`);
     res.render("listings/index.ejs", {allListings: foundListing});

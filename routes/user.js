@@ -4,6 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
 const userController = require("../controllers/users.js");
+const flashRedirect = require("../utils/flashRedirect");
 
 router.route("/signup")
     .get(userController.renderSignupForm)
@@ -13,10 +14,26 @@ router.route("/login")
     .get(userController.renderLoginForm)
     .post(
         saveRedirectUrl,
-        passport.authenticate("local", { 
-            failureRedirect: '/login', 
-            failureFlash: true
-        }), 
+        (req, res, next) => {
+            passport.authenticate("local", (err, user, info) => {
+                if (err) {
+                    return next(err);
+                }
+
+                if (!user) {
+                    req.flash("error", "Invalid username or password. Please try again.");
+                    return flashRedirect(req, res, next, "/login");
+                }
+
+                req.logIn(user, (err) => {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next();
+                });
+            })(req, res, next);
+        },
         userController.login
     );
 

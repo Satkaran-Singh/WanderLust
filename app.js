@@ -15,6 +15,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const contactRouter = require("./routes/contact");
+const adminRouter = require("./routes/admin");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -27,7 +29,7 @@ const store = MongoStore.create({
     touchAfter: 24*3600,
 });
 
-store.on("error", ()=> {
+store.on("error", (err)=> {
     console.log("Error in Mongo Session Store", err);
 });
 
@@ -35,13 +37,17 @@ const sessionOptions = {
     store,
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized : true,
+    saveUninitialized : false,
     cookie:{
-        expires: Date.now() + 7*24*60*60*1000,
         maxAge: 7*24*60*60*1000,
-        httpOnly: true
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production"
     },
 };
+
+if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+}
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -64,16 +70,29 @@ app.get("/", (req, res) => {
     res.redirect("/listings");
 });
 
+app.get("/terms", (req, res) => {
+    res.render("terms.ejs");
+});
+
+app.get("/privacy", (req, res) => {
+    res.render("privacy.ejs");
+});
+
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-
+const PORT = process.env.PORT || 8080;
 main()
     .then(() => {
         console.log("Connected to DB");
-    }).catch((err) => {
-        console.log(err);
+
+        app.listen(PORT, () => {
+            console.log(`Server is listening on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log("Database connection failed:", err);
     });
 
 async function main(){
@@ -89,6 +108,8 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/contact", contactRouter);
+app.use("/admin", adminRouter);
 app.use("/", userRouter);
 
 
@@ -104,6 +125,3 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs", {message});
 });
 
-app.listen(8080, () => {
-    console.log("Server is listening to port 8080");
-});

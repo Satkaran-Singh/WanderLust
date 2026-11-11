@@ -3,12 +3,13 @@ const Review = require("./models/review.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
 const { reviewSchema} = require("./schema.js");
+const flashRedirect = require("./utils/flashRedirect");
 
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()){
         req.session.redirectUrl = req.originalUrl;
         req.flash("error", "You must be logged in first!");
-        return res.redirect("/login")
+        return flashRedirect(req, res, next, "/login");
     }
     next();
 };
@@ -26,7 +27,7 @@ module.exports.isOwner = async (req, res, next) => {
     let listing = await Listing.findById(id);
     if(!listing.owner.equals(res.locals.currUser._id)) {
         req.flash("error", "You are not the owner of this listing");
-        return res.redirect(`/listings/${id}`)
+        return flashRedirect(req, res, next, `/listings/${id}`);
     }
     next();
 };
@@ -57,6 +58,14 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     if(!review.author.equals(res.locals.currUser._id)) {
         req.flash("error", "You are not the author of this review");
         return res.redirect(`/listings/${id}`)
+    }
+    next();
+};
+
+module.exports.isAdmin = (req, res, next) => {
+    if (!req.user || !req.user.isAdmin) {
+        req.flash("error", "Access denied! Admin privileges required.");
+        return flashRedirect(req, res, next, "/listings");
     }
     next();
 };

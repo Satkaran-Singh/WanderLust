@@ -24,36 +24,134 @@ body{
 }
 
 /* Footer */
-.f-info-links a{
-    text-decoration: none;
-    color: #222222;
-}
-
-.f-info-links a:hover{
-    text-decoration: underline;
-}
-.f-info-socials,
-.f-info-links,
-.f-info-brand{
-    width : 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-.f-info-socials i{
-    font-size: 1.2rem;
-    margin-right: 1rem;
-}
-
-.f-info{
-    text-align: center;
-    height: 8rem;
-    display: flex;
+.site-footer {
     background-color: #ebebeb;
+    padding: 3rem 8% 1rem;
+    margin-top: 3rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+}
+
+.footer-brand h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fe424d;
+    margin-bottom: 1rem;
+}
+
+.footer-brand p {
+    max-width: 350px;
+    color: #666;
+    line-height: 1.7;
+}
+
+.footer-section h5 {
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section li {
+    margin-bottom: 0.7rem;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: #555;
+    transition: 0.2s ease;
+}
+
+.footer-section a:hover {
+    color: #fe424d;
+    padding-left: 4px;
+}
+
+/* Social Icons */
+.footer-socials {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 1.3rem;
+}
+
+.footer-socials a {
+    font-size: 1.4rem;
+    color: #222;
+    transition: 0.2s ease;
+}
+
+.footer-socials a:hover {
+    color: #fe424d;
+    transform: translateY(-3px);
+}
+
+/* Bottom Footer */
+.footer-bottom {
+    border-top: 1px solid #ccc;
+    padding-top: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
-    align-content: space-evenly;
+    gap: 0.5rem;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.footer-bottom strong {
+    color: #222;
+}
+
+.heart-icon {
+    color: #fe424d;
+    margin-left: 3px;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 2.5rem 6% 1rem;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+    }
+
+    .footer-brand {
+        grid-column: auto;
+    }
 }
 
 /* Cards */

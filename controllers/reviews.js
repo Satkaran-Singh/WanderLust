@@ -1,7 +1,8 @@
 const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
+const flashRedirect = require("../utils/flashRedirect");
 
-module.exports.createReview = async (req,res) => {
+module.exports.createReview = async (req,res, next) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
     newReview.author = req.user._id;
@@ -11,14 +12,14 @@ module.exports.createReview = async (req,res) => {
     await listing.save();
 
     req.flash("success", "New Review Created Succesfully!");
-    res.redirect(`/listings/${listing._id}`);
+    flashRedirect(req, res, next, `/listings/${listing._id}`);
 };
 
-module.exports.destroyReview = async (req,res) => {
+module.exports.destroyReview = async (req,res, next) => {
     let {id, reviewId } = req.params;
 
     await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
     await Review.findByIdAndDelete(reviewId);
     req.flash("success", "Review Deleted Succesfully!");
-    res.redirect(`/listings/${id}`);
+    flashRedirect(req, res, next, `/listings/${id}`);
 }
