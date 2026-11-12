@@ -171,7 +171,7 @@ module.exports.liveSearch = async (req, res) => {
             {price: !isNaN(data) ? Number(data) : null}
         ]
     })
-    .select("title location country image price category descrription")
+    .select("title location country image price category description")
     .limit(8);
 
     res.json(foundListing);
